@@ -1,5 +1,7 @@
+import AccessTable from "./components/AccessTable";
+
 function App() {
-  return <div>Table</div>;
+  return <AccessTable />;
 }
 
 export default App;

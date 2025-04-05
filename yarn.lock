@@ -361,6 +361,11 @@
     "@eslint/core" "^0.13.0"
     levn "^0.4.1"
 
+"@faker-js/faker@^9.6.0":
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-9.6.0.tgz#64235d20330b142eef3d1d1638ba56c083b4bf1d"
+  integrity sha512-3vm4by+B5lvsFPSyep3ELWmZfE3kicDtmemVpuwl1yH7tqtnHdsA6hG8fbXedMVdkzgtvzWoRgjSB4Q+FHnZiw==
+
 "@humanfs/core@^0.19.1":
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.1.tgz#17c55ca7d426733fe3c561906b8173c336b40a77"
@@ -541,6 +546,18 @@
   version "4.39.0"
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.39.0.tgz#bfe0214e163f70c4fec1c8f7bb8ce266f4c05b7e"
   integrity sha512-yAkUOkIKZlK5dl7u6dg897doBgLXmUHhIINM2c+sND3DZwnrdQkkSiDh7N75Ll4mM4dxSkYfXqU9fW3lLkMFug==
+
+"@tanstack/react-table@^8.21.2":
+  version "8.21.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.21.2.tgz#6a7fce828b64547e33f4606ada8114db496007cc"
+  integrity sha512-11tNlEDTdIhMJba2RBH+ecJ9l1zgS2kjmexDPAraulc8jeNA4xocSNeyzextT0XJyASil4XsCYlJmf5jEWAtYg==
+  dependencies:
+    "@tanstack/table-core" "8.21.2"
+
+"@tanstack/table-core@8.21.2":
+  version "8.21.2"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.21.2.tgz#dd57595a1773652bb6fb437e90a5f5386a49fd7e"
+  integrity sha512-uvXk/U4cBiFMxt+p9/G7yUWI/UbHYbyghLCjlpWZ3mLeIZiUBSKcUnw9UnKkdRz7Z/N4UBuFLWQdJCjUe7HjvA==
 
 "@types/babel__core@^7.20.5":
   version "7.20.5"
