@@ -10,7 +10,7 @@ import {
 export default function AccessTable() {
   const [users, setUsers] = useState<User[]>(makeUsers(30, 100));
   const groups = Object.keys(users[0].groupStates).sort(
-    (a, b) => getAssignCount(b, users) - getAssignCount(a, users)
+    (a, b) => getAssignCount(b, users) - getAssignCount(a, users),
   );
 
   // setup state for each column definition, to trigger a rerender when the column size is set after the first render
@@ -48,21 +48,15 @@ export default function AccessTable() {
     });
   }, []);
   return (
-    <table style={{ whiteSpace: "nowrap", borderCollapse: "collapse" }}>
+    <table className="whitespace-nowrap">
       <thead>
-        <tr>
+        <tr className="align-bottom">
           {table.getLeftLeafHeaders().map((header, i) => (
             <th
               ref={thRefs[i]}
               key={header.id}
-              style={{
-                verticalAlign: "bottom",
-                position: "sticky",
-                top: 0,
-                left: header.column.getStart(),
-                backgroundColor: "white",
-                zIndex: 3,
-              }}
+              className="sticky top-0 z-30 bg-white text-left"
+              style={{ left: header.column.getStart() }}
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
             </th>
@@ -71,13 +65,7 @@ export default function AccessTable() {
             <th
               ref={thRefs[i + table.getLeftLeafHeaders().length]} // offset index to skip pinned column refs
               key={header.id}
-              style={{
-                verticalAlign: "bottom",
-                position: "sticky",
-                top: 0,
-                backgroundColor: "white",
-                zIndex: 2,
-              }}
+              className="sticky top-0 z-20 bg-white"
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
             </th>
@@ -90,18 +78,14 @@ export default function AccessTable() {
             {row.getLeftVisibleCells().map((cell) => (
               <td
                 key={cell.id}
-                style={{
-                  position: "sticky",
-                  left: cell.column.getStart(),
-                  zIndex: 1,
-                  backgroundColor: "white",
-                }}
+                className="sticky z-10 bg-white"
+                style={{ left: cell.column.getStart() }}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
             {row.getCenterVisibleCells().map((cell) => (
-              <td key={cell.id}>
+              <td key={cell.id} className="p-0.5">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
