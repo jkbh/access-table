@@ -9,14 +9,14 @@ export interface User {
   roles: string[];
 }
 
-type AssignmentState = "assigned" | "notAssigned" | "assumed";
+export type AssignmentState = "assigned" | "notAssigned" | "assumed";
 
 export function makeUsers(numUsers: number, numGroups: number) {
   const groups = fakerDE.helpers.multiple(
     () => fakerDE.word.words({ count: { min: 1, max: 3 } }),
     {
       count: numGroups,
-    }
+    },
   );
 
   const users: User[] = [];

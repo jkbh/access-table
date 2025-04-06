@@ -1,14 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { getAssignCount, makeUsers, User } from "../data/user";
+import {
+  getAssignCount,
+  makeUsers,
+  User,
+  AssignmentState,
+} from "../../data/user";
 import { getColumns } from "./columns";
 import {
+  CellContext,
   flexRender,
   getCoreRowModel,
+  RowData,
   useReactTable,
 } from "@tanstack/react-table";
 
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  }
+}
+
 export default function AccessTable() {
-  const [users, _] = useState<User[]>(makeUsers(30, 100));
+  const [users, setUsers] = useState<User[]>(makeUsers(30, 100));
+
+  // const [users, _] = useState<User[]>(makeUsers(30, 100));
   const groups = Object.keys(users[0].groupStates).sort(
     (a, b) => getAssignCount(b, users) - getAssignCount(a, users),
   );

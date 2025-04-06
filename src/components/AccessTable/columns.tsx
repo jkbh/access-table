@@ -1,5 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { User } from "../data/user";
+import { User } from "../../data/user";
+import GroupCell from "./GroupCell";
 
 const columnHelper = createColumnHelper<User>();
 
@@ -22,11 +23,7 @@ export function getColumns(groups: string[]) {
       header: () => (
         <div className="w-mode-sideways-lr translate-x-1 pb-2">{group}</div>
       ),
-      cell: (info) => (
-        <div
-          className={`min-h-8 min-w-8 ${info.getValue() === "assigned" ? "bg-gray-500" : "bg-transparent"}`}
-        ></div>
-      ),
+      cell: GroupCell,
     }),
   );
 
