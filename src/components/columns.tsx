@@ -7,10 +7,12 @@ const columnHelper = createColumnHelper<User>();
 export function getColumns(groups: string[]) {
   const defaultColumns = [
     columnHelper.accessor("id", {
-      header: "ID",
+      header: () => <div className="px-2">ID</div>,
+      cell: (info) => <div className="px-2">{info.getValue()}</div>,
     }),
     columnHelper.accessor("name", {
-      header: "Name",
+      header: () => <div className="px-2">Name</div>,
+      cell: (info) => <div className="px-2">{info.getValue()}</div>,
     }),
   ];
 
@@ -18,11 +20,11 @@ export function getColumns(groups: string[]) {
     columnHelper.accessor((row) => row.groupStates[group] ?? "notAssigned", {
       id: group,
       header: () => (
-        <div className="w-mode-sideways-lr translate-x-1">{group}</div>
+        <div className="w-mode-sideways-lr translate-x-1 pb-2">{group}</div>
       ),
       cell: (info) => (
         <div
-          className={`min-h-8 min-w-8 ${info.getValue() === "assigned" ? "bg-gray-500" : "bg-gray-100"}`}
+          className={`min-h-8 min-w-8 ${info.getValue() === "assigned" ? "bg-gray-500" : "bg-transparent"}`}
         ></div>
       ),
     }),

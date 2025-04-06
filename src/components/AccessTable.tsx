@@ -47,6 +47,7 @@ export default function AccessTable() {
       setColumn({ ...prevCol, size: sizes[i] });
     });
   }, []);
+
   return (
     <table className="whitespace-nowrap">
       <thead>
@@ -55,7 +56,7 @@ export default function AccessTable() {
             <th
               ref={thRefs[i]}
               key={header.id}
-              className="sticky top-0 z-30 bg-white text-left"
+              className="sticky top-0 z-30 border border-gray-300 bg-white text-left"
               style={{ left: header.column.getStart() }}
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
@@ -65,7 +66,7 @@ export default function AccessTable() {
             <th
               ref={thRefs[i + table.getLeftLeafHeaders().length]} // offset index to skip pinned column refs
               key={header.id}
-              className="sticky top-0 z-20 bg-white"
+              className="sticky top-0 z-20 border border-gray-300 bg-white"
             >
               {flexRender(header.column.columnDef.header, header.getContext())}
             </th>
@@ -78,14 +79,14 @@ export default function AccessTable() {
             {row.getLeftVisibleCells().map((cell) => (
               <td
                 key={cell.id}
-                className="sticky z-10 bg-white"
+                className="sticky z-10 border border-gray-300 bg-white"
                 style={{ left: cell.column.getStart() }}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
             {row.getCenterVisibleCells().map((cell) => (
-              <td key={cell.id} className="p-0.5">
+              <td key={cell.id} className="border border-gray-300">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}
