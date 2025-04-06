@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-table";
 
 export default function AccessTable() {
-  const [users, setUsers] = useState<User[]>(makeUsers(30, 100));
+  const [users, _] = useState<User[]>(makeUsers(30, 100));
   const groups = Object.keys(users[0].groupStates).sort(
     (a, b) => getAssignCount(b, users) - getAssignCount(a, users),
   );
