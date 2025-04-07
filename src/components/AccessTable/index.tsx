@@ -70,11 +70,9 @@ export default function AccessTable() {
             ...user,
             groupStates: { ...user.groupStates, [columnId]: value },
           };
-          return [
-            ...old.slice(0, rowIndex),
-            newUser,
-            ...old.slice(rowIndex + 1),
-          ];
+          const newUsers = old.slice();
+          newUsers[rowIndex] = newUser; // update the user in the copied array
+          return newUsers; // return the updated array
         });
       },
     },
