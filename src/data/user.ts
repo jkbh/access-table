@@ -41,3 +41,9 @@ export function makeUsers(numUsers: number, numGroups: number) {
 export function getAssignCount(group: string, users: User[]) {
   return users.filter((user) => user.groupStates[group] === "assigned").length;
 }
+
+export function getGroupsSorted(users: User[]) {
+  return Object.keys(users[0].groupStates).sort(
+    (a, b) => getAssignCount(b, users) - getAssignCount(a, users),
+  );
+}
