@@ -50,17 +50,6 @@ export default function AccessTable() {
   }
 
   const groups = getGroupsSorted(users);
-
-  // setup state for each column definition, to trigger a rerender when the column size is set after the first render
-  // i need this to calculate the correct pin position, without knowing the column widths initially
-
-  // const columns = getColumns(groups).map((column) => {
-  //   const [col, setCol] = useState(column);
-  //   return {
-  //     columnDef: col,
-  //     setColumn: setCol,
-  //   };
-  // });
   const [columns, setColumns] = useState(getColumns(groups));
 
   const table = useReactTable({
