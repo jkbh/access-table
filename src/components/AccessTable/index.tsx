@@ -54,6 +54,7 @@ export default function AccessTable() {
         return { ...user, roles: [] };
       });
     });
+    setHoveredRole(undefined);
     console.log("recalculating roles");
   }
 
