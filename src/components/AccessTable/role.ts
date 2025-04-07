@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { User } from "../../data/user";
+import { tableStore } from "./store";
 
 export interface Role {
   id: string;
@@ -9,10 +9,12 @@ export interface Role {
   used: boolean;
 }
 
-export function calculateRoles(users: User[]) {
+export function calculateRoles(usersKeys: string[]) {
   const groupToRole: Map<string, Role> = new Map();
 
-  for (const user of users) {
+  for (const userKey of usersKeys) {
+    // correct way to access the store here???
+    const user = tableStore.getState().users[userKey];
     const userGroups = Array.from(
       Object.entries(user.groupStates)
         .filter(
@@ -27,7 +29,7 @@ export function calculateRoles(users: User[]) {
           id: group,
           color: faker.color.rgb(),
           groups: [...userGroups],
-          users: [user.name],
+          users: [user.id],
           used: false,
         });
       } else {
@@ -35,7 +37,7 @@ export function calculateRoles(users: User[]) {
           .get(group)!
           .groups.filter((g) => userGroups.includes(g));
         groupToRole.get(group)!.groups = intersection;
-        groupToRole.get(group)!.users.push(user.name);
+        groupToRole.get(group)!.users.push(user.id);
       }
     }
   }
@@ -55,12 +57,7 @@ export function calculateRoles(users: User[]) {
       unique.push(role);
     }
   }
-  const uniqueMap = new Map<string, Role>();
-  for (const role of unique) {
-    uniqueMap.set(role.id, role);
-  }
-
-  return uniqueMap;
+  return unique;
 }
 
 export function removeRoleFromRoles(role: Role, roles: Map<string, Role>) {

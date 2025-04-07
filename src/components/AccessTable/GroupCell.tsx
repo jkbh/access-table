@@ -1,19 +1,28 @@
-import { CellContext } from "@tanstack/react-table";
-import { useContext, useState } from "react";
-import { User, AssignmentState } from "../../data/user";
-import { RolesContext } from "./RolesContext";
+import { memo } from "react";
+import { tableStore } from "./store";
 
-export default function GroupCell({
-  getValue,
-  row,
-  column: { id },
-  table,
-}: CellContext<User, AssignmentState>) {
-  const initialValue = getValue();
-  const [value, setValue] = useState(initialValue);
-
+const GroupCell = memo(function GroupCell({
+  userKey,
+  group,
+}: {
+  userKey: string;
+  group: string;
+}) {
+  const user = tableStore((state) => state.users[userKey]);
+  const setUser = tableStore((state) => state.setUser);
+  const hoveredRoleKey = tableStore((state) => state.hoveredRole);
+  const primaryRole = user.roles
+    .map((key) => tableStore.getState().roles[key])
+    .find((role) => role.groups.includes(group));
+  let hoveredRole =
+    hoveredRoleKey && tableStore.getState().roles[hoveredRoleKey]!;
+  if (hoveredRole === "") {
+    hoveredRole = undefined;
+  }
+  console.log(hoveredRole);
+  const state = user.groupStates[group];
   const backgroundColor = (() => {
-    switch (value) {
+    switch (state) {
       case "assigned":
         return "bg-gray-500";
       case "assumed":
@@ -23,36 +32,30 @@ export default function GroupCell({
     }
   })();
 
+  const localHoveredRole =
+    hoveredRole?.groups.includes(group) && hoveredRole.users.includes(user.id)
+      ? hoveredRole
+      : undefined;
+
+  const roleColor = primaryRole?.color || localHoveredRole?.color || undefined;
+
+  const cursor = state !== "assigned" ? "cursor-pointer" : "cursor-default";
+
   function onClick() {
-    const nextValue = value === "assumed" ? "notAssigned" : "assumed";
-    setValue(nextValue);
-    // TODO: update the value in the table aswell
-    table.options.meta?.updateAssigmentState(row.index, id, nextValue);
+    const nextValue = state === "assumed" ? "notAssigned" : "assumed";
+    setUser(userKey, (prevUser) => ({
+      ...prevUser,
+      groupStates: { ...prevUser.groupStates, [group]: nextValue },
+    }));
   }
-
-  const rolesContext = useContext(RolesContext);
-
-  const primaryRole = Array.from(rolesContext.roles.values()).find(
-    (role) => role.groups.includes(id) && row.original.roles.includes(role.id),
-  );
-
-  const hoveredRole =
-    rolesContext.hoveredRole?.groups.includes(id) &&
-    rolesContext.hoveredRole.users.includes(row.original.name)
-      ? rolesContext.hoveredRole
-      : null;
-
-  const roleColor = primaryRole?.color || hoveredRole?.color || undefined;
-  console.log(primaryRole);
-  console.log(hoveredRole);
-  const cursor =
-    initialValue !== "assigned" ? "cursor-pointer" : "cursor-default";
 
   return (
     <div
       className={`min-h-8 min-w-8 ${backgroundColor} ${cursor}`}
       style={roleColor ? { backgroundColor: roleColor } : {}}
-      onClick={initialValue !== "assigned" ? onClick : undefined}
+      onClick={state !== "assigned" ? onClick : undefined}
     ></div>
   );
-}
+});
+
+export default GroupCell;

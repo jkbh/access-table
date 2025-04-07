@@ -1,7 +1,6 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { User } from "../../data/user";
 import GroupCell from "./GroupCell";
-import { memo } from "react";
 
 const columnHelper = createColumnHelper<User>();
 
@@ -24,7 +23,7 @@ export function getColumns(groups: string[]) {
       header: () => (
         <div className="w-mode-sideways-lr translate-x-1 pb-2">{group}</div>
       ),
-      cell: memo(GroupCell),
+      cell: ({ row }) => <GroupCell userKey={row.original.id} group={group} />,
     }),
   );
 
