@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   makeUsers,
   User,
@@ -19,9 +19,11 @@ import {
   Role,
 } from "./role";
 import RoleButton from "./RoleButton";
+import { RolesContext } from "./RolesContext";
 
 // function to allow changed the original user state from inside the indivual cell renderers
 declare module "@tanstack/react-table" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface TableMeta<TData extends RowData> {
     updateAssigmentState: (
       rowIndex: number,
@@ -30,17 +32,6 @@ declare module "@tanstack/react-table" {
     ) => void;
   }
 }
-
-interface RoleContext {
-  roles: Map<string, Role>;
-  hoveredRole: Role | undefined;
-}
-
-// context to be used in the cell renderers
-export const RolesContext = createContext<RoleContext>({
-  roles: new Map(),
-  hoveredRole: undefined,
-});
 
 export default function AccessTable() {
   const [users, setUsers] = useState<User[]>(makeUsers(10, 50));
@@ -62,17 +53,19 @@ export default function AccessTable() {
 
   // setup state for each column definition, to trigger a rerender when the column size is set after the first render
   // i need this to calculate the correct pin position, without knowing the column widths initially
-  const columns = getColumns(groups).map((column) => {
-    const [col, setCol] = useState(column);
-    return {
-      columnDef: col,
-      setColumn: setCol,
-    };
-  });
+
+  // const columns = getColumns(groups).map((column) => {
+  //   const [col, setCol] = useState(column);
+  //   return {
+  //     columnDef: col,
+  //     setColumn: setCol,
+  //   };
+  // });
+  const [columns, setColumns] = useState(getColumns(groups));
 
   const table = useReactTable({
     data: users,
-    columns: columns.map((column) => column.columnDef),
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
     enableColumnPinning: true,
     initialState: {
@@ -99,16 +92,14 @@ export default function AccessTable() {
   });
 
   // setup references to cells to fetch rendered width
-  const thRefs = table
-    .getAllColumns()
-    .map(() => useRef<HTMLTableCellElement>(null));
+  const thRefs = useRef<HTMLTableCellElement[]>([]); // corrected type
 
   // update columns sizes in the tanstack table state after the table has rendered
   useEffect(() => {
-    const sizes = thRefs.map((ref) => ref.current?.clientWidth);
-    columns.forEach(({ columnDef: c, setColumn }, i) => {
-      setColumn({ ...c, size: sizes[i] });
-    });
+    const sizes = thRefs.current.map((ref) => ref?.clientWidth);
+    setColumns((prevColumns) =>
+      prevColumns.slice().map((col, i) => ({ ...col, size: sizes[i] })),
+    );
   }, []);
 
   function pushRole(role: Role) {
@@ -154,11 +145,13 @@ export default function AccessTable() {
               <tr className="align-bottom">
                 {table.getLeftLeafHeaders().map((header, i) => (
                   <th
-                    ref={thRefs[i]}
+                    ref={(node) => {
+                      thRefs.current[i] = node!;
+                    }} // store the ref in the array
                     key={header.id}
                     className="sticky top-0 z-30 border-r border-b border-gray-300 bg-white text-left"
                     style={{
-                      left: thRefs[i].current
+                      left: thRefs.current[i]
                         ? header.column.getStart() + i
                         : 0,
                     }}
@@ -171,7 +164,10 @@ export default function AccessTable() {
                 ))}
                 {table.getCenterLeafHeaders().map((header, i) => (
                   <th
-                    ref={thRefs[i + table.getLeftLeafHeaders().length]} // offset index to skip pinned column refs
+                    ref={(node) => {
+                      thRefs.current[i + table.getLeftLeafHeaders().length] =
+                        node!;
+                    }} // offset index to skip pinned column refs
                     key={header.id}
                     className="sticky top-0 z-20 border-r border-b border-gray-300 bg-white"
                   >
@@ -191,7 +187,7 @@ export default function AccessTable() {
                       key={cell.id}
                       className="sticky z-10 border-r border-b border-gray-300 bg-white"
                       style={{
-                        left: thRefs[i].current
+                        left: thRefs.current[i]
                           ? cell.column.getStart() + i
                           : 0,
                       }}

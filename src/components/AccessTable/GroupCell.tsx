@@ -1,7 +1,7 @@
 import { CellContext } from "@tanstack/react-table";
 import { useContext, useState } from "react";
 import { User, AssignmentState } from "../../data/user";
-import { RolesContext } from ".";
+import { RolesContext } from "./RolesContext";
 
 export default function GroupCell({
   getValue,
@@ -12,7 +12,7 @@ export default function GroupCell({
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
 
-  let backgroundColor = (() => {
+  const backgroundColor = (() => {
     switch (value) {
       case "assigned":
         return "bg-gray-500";
